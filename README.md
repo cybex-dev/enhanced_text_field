@@ -1,18 +1,41 @@
 # enhanced_text_field
 
-A new Flutter plugin project.
+Provides an enhanced text field with confirm and cancel buttons, while indicating a field has
+changed from initial values. Assists in editing of forms and tracking and displaying changed fields.
+
+## Installation
+This package is not yet available on pub.dev. To use this package, add the following to your
+pubspec.yaml file:
+
+```yaml
+dependencies:
+  enhanced_text_field:
+    git:
+      url: https://github.com/cybex-dev/enhanced_text_field.git
+      ref: master
+```
 
 ## Getting Started
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+### Imports
+```dart
+import 'package:enhanced_text_field/enhanced_text_field.dart';
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This is a (mostly) drop-in replacement for the standard `TextField` widget. It provides (mostly) the same functionality, with additional features.
 
-The plugin project was generated without specifying the `--platforms` flag, no platforms are currently supported.
-To add platforms, run `flutter create -t plugin --platforms <platforms> .` in this directory.
-You can also find a detailed instruction on how to add platforms in the `pubspec.yaml` at https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin-platforms.
+### Example
+```dart
+EnhancedTextField<String>(
+    initialValue: "Initial Value",
+    controller: TextEditingController(),
+    focusNode: FocusNode(),
+    valueMapper: ValueMapper.string,
+);
+```
+
+## Features
+
+- Drop-in replacement for `TextField` widget.
+- Indicate field changes with `didChange` property
+- Accept/reject field changes with `Future<bool>` callback
