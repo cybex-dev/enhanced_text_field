@@ -70,7 +70,7 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
   late final TextEditingController _controller;
   late final FocusNode _focusNode;
   late T _initialValue;
-  // late T _currentValue;
+
   bool didChange = false;
   late final ValueMapper<T> _valueMapper;
 
@@ -134,7 +134,6 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
 
   /// Update the internal current value and set [didChange] to true if the new value is different from the initial value
   void _evaluateDidChange(T newValue) {
-    // _currentValue = newValue;
     didChange = newValue != _initialValue;
   }
 
