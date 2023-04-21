@@ -91,7 +91,14 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
   void didUpdateWidget(covariant EnhancedTextField<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.value != widget.value) {
-      _onWidgetValueUpdated();
+      if (!didChange) {
+        setState(() {
+          _initialValue = widget.initialValue;
+          _controller.text = _valueMapper.format(widget.value ?? _initialValue);
+        });
+      } else {
+        _onWidgetValueUpdated();
+      }
     }
   }
 
