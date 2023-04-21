@@ -30,8 +30,8 @@ class EnhancedTextField<T> extends StatefulWidget {
   /// Called when value changed has been accepted, this represents the updated text field content.
   final ValueChanged<T>? onValueChanged;
 
-  /// Format the value [T] to/from string to be displayed in the text field. If not provided and if `T` is type String, [T.string] is used else an `assertion` is failed
-  final ValueMapper<T>? valueMapper;
+  /// Format the value [T] to/from string to be displayed in the text field.
+  final ValueMapper<T> valueMapper;
 
   /// When tapping on the text field, this callback is called. Useful for showing a date picker.
   final VoidCallback? onTap;
@@ -45,10 +45,10 @@ class EnhancedTextField<T> extends StatefulWidget {
   final String? hintText;
   final String? labelText;
 
-  EnhancedTextField({
+  const EnhancedTextField({
     Key? key,
     required this.initialValue,
-    this.valueMapper,
+    required this.valueMapper,
     this.controller,
     this.focusNode,
     this.value,
@@ -60,9 +60,7 @@ class EnhancedTextField<T> extends StatefulWidget {
     this.enabled = true,
     this.hintText,
     this.labelText,
-  }) : super(key: key) {
-    assert(valueMapper != null || T == String, "valueMapper must be provided if T is not String");
-  }
+  }) : super(key: key);
 
   @override
   State<EnhancedTextField<T>> createState() => _EnhancedTextFieldState<T>();
@@ -79,7 +77,7 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
   @override
   void initState() {
     super.initState();
-    _valueMapper = widget.valueMapper ?? ValueMapper.string;
+    _valueMapper = widget.valueMapper;
     _initialValue = widget.initialValue;
 
     _controller = widget.controller ?? TextEditingController();
