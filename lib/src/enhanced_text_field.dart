@@ -72,7 +72,7 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
   late final TextEditingController _controller;
   late final FocusNode _focusNode;
   late T _initialValue;
-  late T _currentValue;
+  // late T _currentValue;
   bool didChange = false;
   late final ValueMapper _valueMapper;
 
@@ -106,12 +106,10 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
   }
 
   void _attachListeners() {
-    print("attachListeners");
     _focusNode.addListener(_onFocusChanged);
   }
 
   void _detachListeners() {
-    print("detachListeners");
     _focusNode.removeListener(_onFocusChanged);
   }
 
@@ -131,7 +129,7 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
 
   /// Update the internal current value and set [didChange] to true if the new value is different from the initial value
   void _evaluateDidChange(T newValue) {
-    _currentValue = newValue;
+    // _currentValue = newValue;
     didChange = newValue != _initialValue;
   }
 
@@ -140,7 +138,7 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
   }
 
   void _onSave(String value) async {
-    // unfocus the text field
+    // remove focus on text field
     _focusNode.unfocus();
 
     // ask user to confirm the change
@@ -164,7 +162,6 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
   }
 
   void _onRejectChanges() {
-    print("onRejectChanges");
     setState(() {
       _controller.text = _valueMapper.format(_initialValue);
       _focusNode.unfocus();

@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:enhanced_text_field/enhanced_text_field.dart';
 
 void main() {
@@ -87,20 +87,28 @@ class _BasicInputWidgetState extends State<_BasicInputWidget> {
       value: current,
       focusNode: widget.focusNode,
       onNewValueProposed: (updated, initial) async {
-        print("New value proposed: $updated");
+        if (kDebugMode) {
+          print("New value proposed: $updated");
+        }
         return showAcceptNewValueDialog(context, updated, initial).then((value) {
           if (value == true) {
-            print("New value accepted: $updated");
+            if (kDebugMode) {
+              print("New value accepted: $updated");
+            }
             return true;
           } else {
-            print("New valee rejected, continue editing");
+            if (kDebugMode) {
+              print("New value rejected, continue editing");
+            }
             return false;
           }
         });
       },
       valueMapper: ValueMapper.string,
       onValueChanged: (value) {
-        print("Text Field's new value changed to: $value");
+        if (kDebugMode) {
+          print("Text Field's new value changed to: $value");
+        }
         setState(() {
           current = value;
         });
@@ -129,13 +137,19 @@ class _DateInputWidgetState extends State<_DateInputWidget> {
       value: current,
       focusNode: widget.focusNode,
       onNewValueProposed: (updated, initial) async {
-        print("New value proposed: $updated");
+        if (kDebugMode) {
+          print("New value proposed: $updated");
+        }
         return showAcceptNewValueDialog(context, updated.toString(), initial.toString()).then((value) {
           if (value == true) {
-            print("New value accepted: $updated");
+            if (kDebugMode) {
+              print("New value accepted: $updated");
+            }
             return true;
           } else {
-            print("New value rejected, continue editing");
+            if (kDebugMode) {
+              print("New value rejected, continue editing");
+            }
             return false;
           }
         });
@@ -156,7 +170,9 @@ class _DateInputWidgetState extends State<_DateInputWidget> {
         });
       },
       onValueChanged: (value) {
-        print("Text Field's new value changed to: ${value.toString()}");
+        if (kDebugMode) {
+          print("Text Field's new value changed to: ${value.toString()}");
+        }
         setState(() {
           current = value;
         });
