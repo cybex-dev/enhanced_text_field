@@ -72,7 +72,7 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
   late T _initialValue;
   // late T _currentValue;
   bool didChange = false;
-  late final ValueMapper _valueMapper;
+  late final ValueMapper<T> _valueMapper;
 
   @override
   void initState() {
