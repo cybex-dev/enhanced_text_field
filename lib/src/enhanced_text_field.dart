@@ -173,22 +173,59 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final editingActions = EditingActions(
+  Widget _getEditingActions() {
+    return EditingActions(
       didChange: didChange,
       onSave: () => _onSave(_controller.text),
       onCancel: _onRejectChanges,
     );
-    final editButton = IconButton(
-      icon: const Icon(Icons.edit),
-      onPressed: () {
-        setState(() {
-          _focusNode.requestFocus();
-        });
-      },
-    );
+  }
 
+  Widget? _getSuffix() {
+    if (!_focusNode.hasFocus) {
+      return null;
+    }
+
+    return _getEditingActions();
+  }
+
+  Widget? _getSuffixIcon() {
+    if (_focusNode.hasFocus) {
+      return null;
+    }
+
+    if (didChange) {
+      return _getEditingActions();
+    } else {
+      return IconButton(
+        icon: const Icon(Icons.edit),
+        onPressed: () {
+          setState(() {
+            _focusNode.requestFocus();
+          });
+        },
+      );
+    }
+  }
+
+  String? _getHelperText() {
+    if (didChange) {
+      return "Pending changes";
+    } else {
+      return null;
+    }
+  }
+
+  String? _getPrefixText() {
+    if (didChange) {
+      return "*";
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final textField = TextFormField(
       focusNode: _focusNode,
       controller: _controller,
@@ -203,12 +240,12 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
         hintText: widget.hintText,
         labelText: widget.labelText,
         enabled: widget.enabled,
-        helperText: didChange ? "Pending changes" : null,
+        helperText: _getHelperText(),
         helperStyle: TextStyle(color: Theme.of(context).primaryColor),
         alignLabelWithHint: true,
-        suffix: _focusNode.hasFocus ? editingActions : null,
-        suffixIcon: _focusNode.hasFocus ? null : didChange ? editingActions : editButton,
-        prefixText: didChange ? "*" : null,
+        suffix: _getSuffix(),
+        suffixIcon: _getSuffixIcon(),
+        prefixText: _getPrefixText(),
         prefixStyle: TextStyle(color: Theme.of(context).primaryColor),
       ),
     );
