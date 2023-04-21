@@ -169,6 +169,7 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
   void _onRejectChanges() {
     setState(() {
       _controller.text = _valueMapper.format(_initialValue);
+      _evaluateDidChange(_initialValue);
       _focusNode.unfocus();
     });
   }
