@@ -58,7 +58,7 @@ class _EditingActionsState extends State<EditingActions> {
           alignment: Alignment.centerRight,
           sizeCurve: Curves.easeInOut,
         ),
-        VerticalDivider(width: didChange ? 4.0 : 0.0),
+        VerticalDivider(width: didChange ? 4.0 : 0.0, color: Colors.transparent),
         cancelButton,
       ],
     );
