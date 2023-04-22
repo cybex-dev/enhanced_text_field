@@ -5,6 +5,8 @@ import 'actions/editing_actions.dart';
 
 typedef OnNewValueProposed<T> = Future<bool> Function(T newValue, T initialValue);
 
+typedef OnTapWithValue<T> = Future<T> Function();
+
 // typedef ChangedBuilder = Widget Function(BuildContext context, bool changed);
 
 class EnhancedTextField<T> extends StatefulWidget {
@@ -33,8 +35,11 @@ class EnhancedTextField<T> extends StatefulWidget {
   /// Format the value [T] to/from string to be displayed in the text field.
   final ValueMapper<T> valueMapper;
 
-  /// When tapping on the text field, this callback is called. Useful for showing a date picker.
+  /// When tapping on the text field, this callback is called.
   final VoidCallback? onTap;
+
+  /// When tapping on the text field, this callback is called. Useful for showing a date picker.
+  final OnTapWithValue<T>? onTapForValue;
 
   /// Builder for the text field's [TextField.helperText] field, this allows customizing the changed widget for text field hint.
   /// If not provided, "* Pending Changes" is shown.
@@ -56,6 +61,7 @@ class EnhancedTextField<T> extends StatefulWidget {
     this.onValueChanged,
     // this.changedBuilder,
     this.onTap,
+    this.onTapForValue,
     this.readOnly,
     this.enabled = true,
     this.hintText,
@@ -141,15 +147,14 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
     setState(() {});
   }
 
-  void _onSave(String value) async {
+  void _onSave(T value) async {
     // remove focus on text field
     _focusNode.unfocus();
 
     // ask user to confirm the change
     bool acceptNewValue = true;
-    final newValue = _valueMapper.map(value);
     if (widget.onNewValueProposed != null) {
-      acceptNewValue = await widget.onNewValueProposed!(newValue, _initialValue);
+      acceptNewValue = await widget.onNewValueProposed!(value, _initialValue);
     }
     // if the user does not accept the new value, re-focus the text field for further editing
     if (!acceptNewValue) {
@@ -158,11 +163,11 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
     }
 
     // set new initial value * update [current] internal value
-    _initialValue = newValue;
-    _evaluateDidChange(newValue);
+    _initialValue = value;
+    _evaluateDidChange(value);
 
     // update the value with callback for user to handle
-    widget.onValueChanged?.call(newValue);
+    widget.onValueChanged?.call(value);
   }
 
   void _onRejectChanges() {
@@ -176,7 +181,10 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
   Widget _getEditingActions() {
     return EditingActions(
       didChange: didChange,
-      onSave: () => _onSave(_controller.text),
+      onSave: () {
+        final newValue =_valueMapper.map(_controller.text);
+        _onSave(newValue);
+      },
       onCancel: _onRejectChanges,
     );
   }
@@ -232,8 +240,20 @@ class _EnhancedTextFieldState<T> extends State<EnhancedTextField<T>> {
       validator: (value) => value!.isEmpty ? "Required" : null,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       readOnly: widget.readOnly ?? !_focusNode.hasFocus,
-      onTap: widget.onTap,
-      onEditingComplete: () => _onSave(_controller.text),
+      onTap: () {
+        if(widget.onTapForValue != null) {
+          widget.onTapForValue!().then((value) {
+            _onSave(value);
+          });
+        } else if(widget.onTap != null) {
+          widget.onTap?.call();
+        }
+        // widget.onTap
+      },
+      onEditingComplete: () {
+        final newValue = _valueMapper.map(_controller.text);
+        _onSave(newValue);
+      },
       onChanged: _onTextChanged,
       decoration: InputDecoration(
         border: const UnderlineInputBorder(),
