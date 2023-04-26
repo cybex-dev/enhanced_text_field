@@ -1,7 +1,7 @@
 name: enhanced_text_field
 description: Provides an enhanced text field with confirm and cancel buttons, while indicating a field has changed from initial values. Assists in editing of forms and tracking and displaying changed fields.
 version: 0.0.1
-homepage: earthbase.io
+homepage: https://earthbase.io
 
 environment:
   sdk: '>=2.19.4 <3.0.0'
